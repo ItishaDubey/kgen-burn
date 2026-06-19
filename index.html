@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KGeN Burns — Supply Only Moves One Way</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Saira:wght@500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Brand Design System ─────────────────────────────────────
+       Primary:
+         Acid Green  #8CFF05
+         Slate Blue  #1F3338
+       Secondary:
+         Grey 1      #DBEDF1
+         Grey 2      #BDDCDA
+         Grey 3      #87A7A6
+         Grey 4      #436164
+       Page BG:      #0E1719  (darker than Slate Blue — intentional)
+    ──────────────────────────────────────────────────────────── */
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green:   #8CFF05;
+      --green-hover: #A6FF3D;
+      --slate:   #1F3338;
+      --bg:      #0E1719;
+      --panel:   #121D21;
+      --card:    #16252A;
+      --grey1:   #DBEDF1;
+      --grey2:   #BDDCDA;
+      --grey3:   #87A7A6;
+      --grey4:   #436164;
+      --font-ui: 'Saira', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; container-type: inline-size; }
+
+    body {
+      background: var(--bg);
+      color: var(--grey2);
+      font-family: var(--font-ui);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Utility ──────────────────────────────────────────────── */
+    .label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--grey4);
+    }
+    .section-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .green { color: var(--green); }
+    .sr-only { position: absolute; width: 1px; height: 1px; clip: rect(0,0,0,0); overflow: hidden; }
+
+    /* ── Keyframes ─────────────────────────────────────────────── */
+    @keyframes kgbBlink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    @keyframes kgbPulse {
+      0% { box-shadow: 0 0 0 0 rgba(140,255,5,0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(140,255,5,0); }
+      100% { box-shadow: 0 0 0 0 rgba(140,255,5,0); }
+    }
+    @keyframes kgbFlow {
+      from { transform: translateX(-120%); }
+      to   { transform: translateX(120%); }
+    }
+    @keyframes kgbScan {
+      from { transform: translateY(-100%); }
+      to   { transform: translateY(100%); }
+    }
+    @keyframes kgbFire {
+      0%, 100% { transform: scaleY(1) translateY(0); opacity: 1; }
+      50%       { transform: scaleY(1.08) translateY(-2px); opacity: 0.85; }
+    }
+    @keyframes kgbSlideIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes kgbParticleRise {
+      from { transform: translateY(0); opacity: 0.8; }
+      to   { transform: translateY(-100vh); opacity: 0; }
+    }
+
+    /* ── NAV ───────────────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid rgba(219,237,241,0.06);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 0 32px;
+      height: 56px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo {
+      width: 18px;
+      height: 21px;
+      flex-shrink: 0;
+    }
+    .nav-brand-text {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--grey1);
+      letter-spacing: -0.01em;
+    }
+    .nav-brand-sep {
+      width: 1px;
+      height: 16px;
+      background: rgba(219,237,241,0.2);
+    }
+    .nav-tracker {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--grey3);
+    }
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--green);
+      margin-left: auto;
+    }
+    .nav-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: kgbBlink 1.2s steps(1) infinite;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--grey2);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--green); }
+    .nav-links a.active {
+      color: var(--green);
+      border-bottom: 2px solid var(--green);
+      padding-bottom: 2px;
+    }
+    .nav-page-id {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--grey4);
+      white-space: nowrap;
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-page-id { display: none; }
+    }
+
+    /* ── HERO ──────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      container-type: inline-size;
+    }
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 80px 32px;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--grey4);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-headline {
+      font-family: var(--font-ui);
+      font-weight: 900;
+      font-size: clamp(60px, 18cqi, 240px);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      color: var(--grey1);
+      margin-bottom: 12px;
+    }
+    .hero-headline .accent { color: var(--green); }
+    .hero-sub {
+      font-family: var(--font-mono);
+      font-size: clamp(13px, 2cqi, 22px);
+      letter-spacing: 0.06em;
+      color: var(--grey3);
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+    .hero-counter {
+      font-family: var(--font-ui);
+      font-weight: 900;
+      font-size: clamp(40px, 9cqi, 120px);
+      color: var(--green);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .hero-counter-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--grey3);
+      text-transform: uppercase;
+    }
+    .hero-desc {
+      max-width: 540px;
+      margin: 24px auto 0;
+      font-size: 16px;
+      color: var(--grey3);
+      font-weight: 500;
+    }
+
+    /* ── SECTION SHARED ────────────────────────────────────────── */
+    section {
+      padding: 100px 0;
+      position: relative;
+    }
+    section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(90% 130% at 50% 100%, rgba(140,255,5,0.04), transparent);
+      pointer-events: none;
+    }
+    .sec-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--grey4);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .sec-heading {
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: clamp(28px, 4cqi, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--grey1);
+      margin-bottom: 12px;
+    }
+    .sec-sub {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: clamp(20px, 3cqi, 36px);
+      color: var(--green);
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .sec-body {
+      font-size: 16px;
+      color: var(--grey3);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    /* ── SUPPLY VISUALISATION ──────────────────────────────────── */
+    .visual { background: var(--panel); }
+
+    .supply-bar-wrap {
+      position: relative;
+      margin: 48px 0 32px;
+      height: 52px;
+      background: var(--slate);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .supply-bar-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 2.2%;
+      background: linear-gradient(90deg, #5BCC00, var(--green));
+      border-radius: 6px;
+      overflow: hidden;
+      animation: kgbFire 2.5s ease-in-out infinite;
+    }
+    .supply-bar-shimmer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+      animation: kgbFlow 1.6s linear infinite;
+    }
+    .supply-bar-scan {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: rgba(140,255,5,0.6);
+      animation: kgbScan 2.8s linear infinite;
+    }
+    .supply-bar-scan2 {
+      animation-delay: 0.9s;
+    }
+    .supply-bar-label {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--grey3);
+    }
+    .supply-bar-marker {
+      position: absolute;
+      left: 2.2%;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+    }
+    .supply-bar-marker-inner {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      color: var(--green);
+      white-space: nowrap;
+      padding-left: 6px;
+    }
+    .supply-bar-projected {
+      position: absolute;
+      left: 2.2%;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(140,255,5,0.06) 0px,
+        rgba(140,255,5,0.06) 4px,
+        transparent 4px,
+        transparent 12px
+      );
+      border-left: 1px dashed rgba(140,255,5,0.3);
+    }
+
+    .supply-legend {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .supply-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--grey3);
+    }
+    .supply-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+    .supply-legend-dot.green { background: var(--green); }
+    .supply-legend-dot.muted { background: var(--slate); }
+    .supply-legend-dot.dashed { background: repeating-linear-gradient(90deg, rgba(140,255,5,0.4) 0px, rgba(140,255,5,0.4) 3px, transparent 3px, transparent 7px); }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(219,237,241,0.06);
+      border: 1px solid rgba(219,237,241,0.06);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 700px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+    .stat-cell {
+      background: var(--card);
+      padding: 28px 24px;
+    }
+    .stat-value {
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: clamp(22px, 3.5cqi, 40px);
+      color: var(--grey1);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-value .green { color: var(--green); }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--grey4);
+      text-transform: uppercase;
+    }
+    .stat-note {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--grey4);
+      line-height: 1.5;
+    }
+    .stat-note span { display: block; color: var(--grey3); font-size: 10px; margin-top: 4px; }
+
+    .supply-footer {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      color: var(--grey4);
+      line-height: 1.7;
+    }
+    .supply-footer strong { color: var(--grey3); font-weight: 700; }
+
+    /* ── GENESIS BURN ─────────────────────────────────────────── */
+    .genesis { background: var(--bg); }
+
+    .fact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: rgba(219,237,241,0.06);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 48px 0 40px;
+    }
+    .fact-card {
+      background: var(--card);
+      padding: 36px 32px;
+    }
+    .fact-card-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--green);
+      margin-bottom: 20px;
+    }
+    .fact-card-title {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--grey1);
+      margin-bottom: 12px;
+    }
+    .fact-card-body {
+      font-size: 14px;
+      color: var(--grey3);
+      line-height: 1.7;
+    }
+
+    .genesis-footer {
+      font-style: italic;
+      color: var(--grey4);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      margin-bottom: 32px;
+    }
+
+    /* ── CTAs ──────────────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: var(--green);
+      color: var(--bg);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--green-hover); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: transparent;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      border: 1px solid rgba(140,255,5,0.35);
+      border-radius: 6px;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--green);
+      background: rgba(140,255,5,0.06);
+    }
+
+    /* ── HOW BURNS WORK ────────────────────────────────────────── */
+    .why { background: var(--panel); }
+
+    .why-body {
+      font-size: 16px;
+      color: var(--grey3);
+      max-width: 580px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+    }
+    .step-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 48px;
+    }
+    .step {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(219,237,241,0.05);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--green);
+      padding-top: 3px;
+      min-width: 28px;
+    }
+    .step-text {
+      font-family: var(--font-ui);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--grey2);
+      line-height: 1.5;
+    }
+    .step-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--grey4);
+      margin-top: 4px;
+    }
+    .why-cta-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ── BURN LEDGER ───────────────────────────────────────────── */
+    .mechanic { background: var(--bg); }
+
+    .ledger-desc {
+      font-size: 15px;
+      color: var(--grey3);
+      max-width: 580px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid rgba(219,237,241,0.06);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ledger-table th {
+      background: var(--card);
+      padding: 14px 20px;
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--grey4);
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(219,237,241,0.06);
+    }
+    .ledger-table td {
+      padding: 18px 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--grey3);
+      border-bottom: 1px solid rgba(219,237,241,0.04);
+    }
+    .ledger-table tr:last-child td { border-bottom: none; }
+    .ledger-table tr.confirmed td { color: var(--grey2); }
+    .ledger-table tr.pending td { opacity: 0.55; font-style: italic; }
+    .ledger-table tr.pending td:first-child { opacity: 1; font-style: normal; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+    .status-badge.confirmed {
+      background: var(--green);
+      color: var(--bg);
+    }
+    .status-badge.confirmed .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--bg);
+      animation: kgbPulse 2s infinite;
+    }
+    .status-badge.pending {
+      background: rgba(189,220,218,0.08);
+      color: var(--grey3);
+      border: 1px dashed rgba(189,220,218,0.2);
+    }
+    .status-badge.soon {
+      background: rgba(140,255,5,0.1);
+      color: var(--green);
+      border: 1px solid rgba(140,255,5,0.2);
+    }
+    .ledger-link {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--green);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(140,255,5,0.25);
+      padding-bottom: 1px;
+      transition: border-color 0.15s;
+      white-space: nowrap;
+    }
+    .ledger-link:hover { border-color: var(--green); }
+    @media (max-width: 700px) {
+      .ledger-table th:nth-child(2),
+      .ledger-table td:nth-child(2) { display: none; }
+    }
+
+    /* ── CLOSE ─────────────────────────────────────────────────── */
+    .close-sec {
+      background: var(--panel);
+      text-align: center;
+    }
+    .close-heading {
+      font-family: var(--font-ui);
+      font-weight: 900;
+      font-size: clamp(36px, 7cqi, 96px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--grey1);
+      margin-bottom: 12px;
+    }
+    .close-sub {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    /* ── FOOTER ────────────────────────────────────────────────── */
+    footer {
+      background: var(--grey1);
+      padding: 40px 32px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-brand {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--slate);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--grey4);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--slate); }
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--grey4);
+    }
+
+    /* ── SCROLL ANIMATIONS ─────────────────────────────────────── */
+    .animate-in {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .animate-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="https://kgen.io" class="nav-brand">
+        <!-- KGeN Logo SVG -->
+        <svg class="nav-logo" viewBox="0 0 18 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M9 0L18 5.25V15.75L9 21L0 15.75V5.25L9 0Z" fill="#8CFF05"/>
+          <path d="M5.5 7L9 10.5L12.5 7" stroke="#0E1719" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M9 10.5V15" stroke="#0E1719" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-brand-text">KGeN</span>
+        <span class="nav-brand-sep"></span>
+        <span class="nav-tracker">Burns Tracker</span>
+      </a>
+
+      <div class="nav-status" aria-label="System status: online">
+        <span class="nav-status-dot"></span>
+        STATUS : ONLINE
+      </div>
+
+      <ul class="nav-links" role="list">
+        <li><a href="https://kgen.io">Home</a></li>
+        <li><a href="https://kgen.io">$KGEN</a></li>
+        <li><a href="https://kgen.io">AI Data</a></li>
+        <li><a href="https://kgen.io">Network</a></li>
+        <li><a href="#" class="active" aria-current="page">Burns</a></li>
+      </ul>
+
+      <span class="nav-page-id">// KGEN PROTOCOL — BURN TRACKER</span>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" data-sec="hero" aria-labelledby="hero-heading">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-content">
+      <p class="hero-eyebrow animate-in">Proof of retirement</p>
+      <h1 class="hero-headline animate-in" id="hero-heading">
+        <span class="accent">$KGEN</span><br>BURNS
+      </h1>
+      <p class="hero-sub animate-in">Supply only moves one way</p>
+      <div class="hero-counter animate-in" data-count="22000000" aria-live="polite">22,000,000</div>
+      <p class="hero-counter-label animate-in">$KGEN</p>
+      <p class="hero-desc animate-in">
+        22,000,000 $KGEN permanently retired at genesis.<br>
+        Not a sale. Not a buyback.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── SUPPLY VISUALISATION ── -->
+  <section class="visual" data-sec="visual" aria-labelledby="visual-heading">
+    <div class="section-wrap">
+      <p class="sec-label animate-in">// Supply Visualisation</p>
+      <h2 class="sec-heading animate-in" id="visual-heading">Where the supply stands.</h2>
+
+      <div class="supply-bar-wrap animate-in" role="img" aria-label="Supply bar: 2.2% burned, 97.8% remaining">
+        <div class="supply-bar-fill">
+          <div class="supply-bar-shimmer"></div>
+          <div class="supply-bar-scan"></div>
+          <div class="supply-bar-scan supply-bar-scan2"></div>
+        </div>
+        <div class="supply-bar-projected"></div>
+        <div class="supply-bar-marker">
+          <span class="supply-bar-marker-inner">GENESIS BURN — 22M</span>
+        </div>
+        <div class="supply-bar-label">← FUTURE BURNS ADD HERE →</div>
+      </div>
+
+      <div class="supply-legend animate-in">
+        <div class="supply-legend-item">
+          <span class="supply-legend-dot green"></span>
+          Retired — 22,000,000
+        </div>
+        <div class="supply-legend-item">
+          <span class="supply-legend-dot muted"></span>
+          Remaining — 978,000,000
+        </div>
+        <div class="supply-legend-item">
+          <span class="supply-legend-dot dashed"></span>
+          Projected future burns
+        </div>
+      </div>
+
+      <div class="stats-grid animate-in">
+        <div class="stat-cell">
+          <div class="stat-value green" data-count="22000000">22,000,000</div>
+          <div class="stat-label">Tokens removed from circulation forever</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-value green" data-count="10" data-pre="~" data-suf="%">~10%</div>
+          <div class="stat-label">Of Circulating Supply</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-value green" data-count="2.2" data-suf="%" data-dec="1">2.2%</div>
+          <div class="stat-label">Of Total Supply (1,000,000,000)</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-value" data-count="1000000000">1,000,000,000</div>
+          <div class="stat-label">Total $KGEN Supply</div>
+        </div>
+      </div>
+
+      <p class="supply-footer animate-in">
+        <strong>Every AI data contract = a share of margin → on-chain buy &amp; retire.</strong><br>
+        The bar only grows to the right.<br>
+        <span style="color:var(--grey4);font-size:11px;letter-spacing:0.06em;">PROJECTED — AS REVENUE LINKS ON-CHAIN</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ── GENESIS BURN ── -->
+  <section class="genesis" data-sec="genesis" aria-labelledby="genesis-heading">
+    <div class="section-wrap">
+      <p class="sec-label animate-in">// Genesis Burn — The Facts</p>
+      <h2 class="sec-heading animate-in" id="genesis-heading">Not a sale. Not a buyback.</h2>
+      <p class="sec-sub animate-in">A retirement.</p>
+
+      <div class="fact-grid animate-in">
+        <div class="fact-card">
+          <div class="fact-card-num">01</div>
+          <h3 class="fact-card-title">No owner. Not a sale.</h3>
+          <p class="fact-card-body">Drawn entirely from unclaimed pools with no owner. Zero insider involvement. Zero market impact from selling.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fact-card-num">02</div>
+          <h3 class="fact-card-title">Executed publicly on Aptos</h3>
+          <p class="fact-card-body">Executed on the Aptos blockchain. Every address, every transaction — open and readable by anyone, any time.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fact-card-num">03</div>
+          <h3 class="fact-card-title">Irreversible</h3>
+          <p class="fact-card-body">This is the first burn. Every AI data contract that follows will fund the next. The mechanism does not stop.</p>
+        </div>
+      </div>
+
+      <p class="genesis-footer animate-in">Irreversible by design. Perpetual by code.</p>
+
+      <a
+        href="https://explorer.aptoslabs.com/txn/5545574477/balanceChange?network=mainnet"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-primary animate-in"
+      >
+        View genesis burn on Aptos Explorer →
+      </a>
+    </div>
+  </section>
+
+  <!-- ── HOW FUTURE BURNS WORK ── -->
+  <section class="why" data-sec="why" aria-labelledby="why-heading">
+    <div class="section-wrap">
+      <p class="sec-label animate-in">// How Future Burns Work</p>
+      <h2 class="sec-heading animate-in" id="why-heading">
+        Every burn.<br><span class="green">Check the chain.</span>
+      </h2>
+      <p class="sec-sub animate-in">Don't trust the claim.</p>
+
+      <p class="why-body animate-in">
+        Every burn is on-chain. The address is public. The transaction is permanent.
+        Click below and verify it yourself.
+      </p>
+
+      <div class="step-flow animate-in" role="list">
+        <div class="step" role="listitem">
+          <span class="step-num">01</span>
+          <div>
+            <div class="step-text">Labs pay KGeN for verified human data</div>
+            <div class="step-sub">AI DATA CONTRACT SIGNED</div>
+          </div>
+        </div>
+        <div class="step" role="listitem">
+          <span class="step-num">02</span>
+          <div>
+            <div class="step-text">AI contract margin earmarked for burn</div>
+            <div class="step-sub">CONTRIBUTION MARGIN ALLOCATED</div>
+          </div>
+        </div>
+        <div class="step" role="listitem">
+          <span class="step-num">03</span>
+          <div>
+            <div class="step-text">Revenue triggers on-chain buy &amp; retire</div>
+            <div class="step-sub">AUTOMATED, VERIFIABLE, PERMANENT</div>
+          </div>
+        </div>
+        <div class="step" role="listitem">
+          <span class="step-num">04</span>
+          <div>
+            <div class="step-text">Transaction recorded on Aptos mainnet</div>
+            <div class="step-sub">PUBLIC ADDRESS, OPEN TO ANYONE</div>
+          </div>
+        </div>
+        <div class="step" role="listitem">
+          <span class="step-num">05</span>
+          <div>
+            <div class="step-text">Supply shrinks. Irreversibly. Forever.</div>
+            <div class="step-sub">AS REVENUE SCALES ON-CHAIN</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="sec-body animate-in" style="margin-bottom:32px;">
+        As revenue scales on-chain, supply shrinks further — irreversibly, verifiably, forever.
+      </p>
+
+      <div class="why-cta-row animate-in">
+        <a
+          href="https://explorer.aptoslabs.com/txn/5545574477/balanceChange?network=mainnet"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-primary"
+        >
+          View burn on Aptos Explorer →
+        </a>
+        <a
+          href="https://explorer.aptoslabs.com/txn/5545574477/balanceChange?network=mainnet"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-secondary"
+        >
+          Verify it yourself →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BURN LEDGER ── -->
+  <section class="mechanic" data-sec="mechanic" aria-labelledby="ledger-heading">
+    <div class="section-wrap">
+      <p class="sec-label animate-in">// Burn Ledger</p>
+      <h2 class="sec-heading animate-in" id="ledger-heading">
+        Revenue grows. The burn ledger grows.
+      </h2>
+      <p class="sec-sub animate-in">Supply shrinks.</p>
+
+      <p class="ledger-desc animate-in">
+        Each new revenue-linked burn event will appear in this ledger — timestamped, on-chain,
+        verifiable by anyone. No trust required.
+      </p>
+
+      <div class="animate-in" style="overflow-x:auto;">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Burn Event</th>
+              <th>Source</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Verify</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="confirmed">
+              <td>Genesis Burn</td>
+              <td>Unclaimed Pools</td>
+              <td>22,000,000</td>
+              <td>
+                <span class="status-badge confirmed">
+                  <span class="dot"></span>CONFIRMED
+                </span>
+              </td>
+              <td>
+                <a
+                  href="https://explorer.aptoslabs.com/txn/5545574477/balanceChange?network=mainnet"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ledger-link"
+                >
+                  View on Aptos Explorer →
+                </a>
+              </td>
+            </tr>
+            <tr class="pending">
+              <td>Revenue Burn #01</td>
+              <td>AI contract margin</td>
+              <td>—</td>
+              <td>
+                <span class="status-badge pending">Pending →</span>
+              </td>
+              <td>
+                <span class="ledger-link" style="cursor:default;opacity:0.4;border-color:transparent;">View on-chain →</span>
+              </td>
+            </tr>
+            <tr class="pending">
+              <td>Revenue Burn #02</td>
+              <td>AI contract margin</td>
+              <td>—</td>
+              <td>
+                <span class="status-badge soon">LIVE SOON</span>
+              </td>
+              <td>
+                <span class="ledger-link" style="cursor:default;opacity:0.4;border-color:transparent;">View on-chain →</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CLOSE ── -->
+  <section class="close-sec" data-sec="close">
+    <div class="section-wrap">
+      <h2 class="close-heading animate-in">Supply only<br>moves one way.</h2>
+      <p class="close-sub animate-in">Verified on-chain. Forever.</p>
+      <a href="https://kgen.io" class="btn-secondary animate-in">
+        Back to KGeN.io →
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-brand">KGeN</span>
+      <ul class="footer-links" role="list">
+        <li><a href="https://kgen.io">Home</a></li>
+        <li><a href="https://kgen.io">$KGEN</a></li>
+        <li><a href="https://kgen.io">AI Data</a></li>
+        <li><a href="https://kgen.io">Network</a></li>
+        <li><a href="#">Burns</a></li>
+        <li><a href="https://explorer.aptoslabs.com/txn/5545574477/balanceChange?network=mainnet" target="_blank" rel="noopener noreferrer">Aptos Explorer</a></li>
+      </ul>
+      <span class="footer-copy">© 2025 KGEN GLOBAL — All rights reserved</span>
+    </div>
+  </footer>
+
+  <script>
+    // ── Canvas particle animation (hero background) ───────────────
+    (function() {
+      const canvas = document.getElementById('hero-canvas');
+      const ctx = canvas.getContext('2d');
+      const GREEN = '#8CFF05';
+
+      let W, H, particles, nodes;
+
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+
+      function mkParticle() {
+        return {
+          x: Math.random() * W,
+          y: H + Math.random() * H * 0.2,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: -(0.3 + Math.random() * 0.6),
+          r: 1 + Math.random() * 2,
+          a: 0.5 + Math.random() * 0.5,
+          life: 0,
+          maxLife: 180 + Math.random() * 120,
+        };
+      }
+
+      function mkNode() {
+        return {
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          r: 1.5,
+          pulse: Math.random() * Math.PI * 2,
+        };
+      }
+
+      function init() {
+        resize();
+        particles = Array.from({ length: 55 }, mkParticle);
+        nodes = Array.from({ length: 30 }, mkNode);
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // nodes & connections
+        for (let i = 0; i < nodes.length; i++) {
+          const n = nodes[i];
+          n.x += n.vx; n.y += n.vy;
+          if (n.x < 0 || n.x > W) n.vx *= -1;
+          if (n.y < 0 || n.y > H) n.vy *= -1;
+          n.pulse += 0.02;
+
+          for (let j = i + 1; j < nodes.length; j++) {
+            const m = nodes[j];
+            const dx = n.x - m.x, dy = n.y - m.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 160) {
+              ctx.beginPath();
+              ctx.moveTo(n.x, n.y);
+              ctx.lineTo(m.x, m.y);
+              ctx.strokeStyle = `rgba(140,255,5,${0.04 * (1 - dist / 160)})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+
+          const pa = 0.08 + 0.05 * Math.sin(n.pulse);
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(140,255,5,${pa})`;
+          ctx.fill();
+        }
+
+        // rising particles
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx; p.y += p.vy; p.life++;
+          const progress = p.life / p.maxLife;
+          const alpha = p.a * Math.sin(Math.PI * progress);
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(140,255,5,${alpha})`;
+          ctx.fill();
+
+          if (p.life >= p.maxLife || p.y < -20) {
+            particles[i] = mkParticle();
+          }
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', () => { resize(); });
+      init();
+      draw();
+    })();
+
+    // ── Scroll-triggered animate-in ───────────────────────────────
+    (function() {
+      const els = document.querySelectorAll('.animate-in');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      els.forEach(el => io.observe(el));
+    })();
+
+    // ── Animated counters ─────────────────────────────────────────
+    (function() {
+      const counters = document.querySelectorAll('[data-count]');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          const el = e.target;
+          const target = parseFloat(el.dataset.count);
+          const pre = el.dataset.pre || '';
+          const suf = el.dataset.suf || '';
+          const dec = parseInt(el.dataset.dec || '0', 10);
+          const duration = 1400;
+          const start = performance.now();
+
+          function fmt(n) {
+            return pre + n.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf;
+          }
+
+          function step(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = fmt(target * eased);
+            if (progress < 1) requestAnimationFrame(step);
+            else el.textContent = fmt(target);
+          }
+
+          requestAnimationFrame(step);
+          io.unobserve(el);
+        });
+      }, { threshold: 0.3 });
+      counters.forEach(el => io.observe(el));
+    })();
+  </script>
+</body>
+</html>
