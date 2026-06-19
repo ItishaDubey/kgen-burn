@@ -373,21 +373,55 @@
       margin-bottom: 40px;
     }
 
-    .bar-wrap {
+    /* individual bar rows */
+    .bar-row { margin-bottom: 28px; }
+    .bar-row-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .bar-row-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .1em;
+      color: var(--grey4);
+      text-transform: uppercase;
+    }
+    .bar-row-pct {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .1em;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .bar-row-badge {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .1em;
+      color: var(--grey3);
+      border: 1px solid rgba(219,237,241,.15);
+      border-radius: 3px;
+      padding: 3px 8px;
+    }
+
+    .bar-track {
       position: relative;
-      height: 56px;
+      height: 44px;
       background: var(--slate);
-      border-radius: 6px;
+      border-radius: 5px;
       overflow: hidden;
-      margin-bottom: 20px;
     }
     .bar-fill {
       position: absolute;
       left: 0; top: 0; bottom: 0;
-      width: 2.2%;
       background: linear-gradient(90deg, var(--green-dim), var(--green));
-      border-radius: 6px;
+      border-radius: 5px;
       overflow: hidden;
+      animation: fire 2.8s ease-in-out infinite;
+    }
+    .bar-fill-wide {
+      background: linear-gradient(90deg, var(--green-dim), var(--green));
       animation: fire 2.8s ease-in-out infinite;
     }
     .bar-shimmer {
@@ -403,31 +437,30 @@
       animation: scan 2.8s linear infinite;
     }
     .bar-scan2 { animation-delay: .9s; }
-    .bar-projected {
+    .bar-inner-label {
       position: absolute;
-      left: 2.2%; right: 0; top: 0; bottom: 0;
-      background: repeating-linear-gradient(
-        90deg,
-        rgba(140,255,5,.07) 0,rgba(140,255,5,.07) 4px,
-        transparent 4px,transparent 14px
-      );
-      border-left: 1px dashed rgba(140,255,5,.3);
-    }
-    .bar-marker {
-      position: absolute;
-      left: calc(2.2% + 6px); top: 0; bottom: 0;
-      display: flex; align-items: center;
-    }
-    .bar-marker-label {
+      left: 10px; top: 50%;
+      transform: translateY(-50%);
       font-family: var(--mono);
       font-size: 9px;
       letter-spacing: .07em;
       color: var(--green);
       white-space: nowrap;
+      z-index: 1;
     }
-    .bar-right-label {
+    .bar-inner-label.dark { color: var(--bg); }
+    .bar-projected-fill {
       position: absolute;
-      right: 14px; top: 50%;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(140,255,5,.18) 0,rgba(140,255,5,.18) 5px,
+        transparent 5px,transparent 13px
+      );
+    }
+    .bar-projected-label {
+      position: absolute;
+      right: 12px; top: 50%;
       transform: translateY(-50%);
       font-family: var(--mono);
       font-size: 9px;
@@ -439,7 +472,7 @@
       display: flex;
       gap: 28px;
       flex-wrap: wrap;
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
     .legend-item {
       display: flex;
@@ -457,47 +490,7 @@
     }
     .legend-dot.g { background: var(--green); }
     .legend-dot.s { background: var(--slate); }
-    .legend-dot.d {
-      background: repeating-linear-gradient(
-        90deg,rgba(140,255,5,.5) 0,rgba(140,255,5,.5) 3px,transparent 3px,transparent 7px
-      );
-    }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 1px;
-      background: rgba(219,237,241,.06);
-      border: 1px solid rgba(219,237,241,.06);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 28px;
-    }
-    @media (max-width: 700px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 380px) { .stats-grid { grid-template-columns: 1fr; } }
-
-    .stat-cell {
-      background: var(--bg-card);
-      padding: 28px 22px;
-    }
-    .stat-val {
-      font-family: var(--ui);
-      font-weight: 800;
-      font-size: clamp(20px, 2.5vw, 34px);
-      color: var(--grey1);
-      letter-spacing: -.02em;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .stat-val.g { color: var(--green); }
-    .stat-lbl {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: .08em;
-      color: var(--grey4);
-      text-transform: uppercase;
-      line-height: 1.5;
-    }
     .supply-note {
       font-family: var(--mono);
       font-size: 12px;
@@ -910,48 +903,61 @@
         </p>
       </div>
 
-      <div class="bar-wrap reveal">
-        <div class="bar-fill">
-          <div class="bar-shimmer"></div>
-          <div class="bar-scan"></div>
-          <div class="bar-scan bar-scan2"></div>
+      <!-- Bar 1: Total supply — 2.2% retired -->
+      <div class="bar-row reveal">
+        <div class="bar-row-head">
+          <span class="bar-row-label">Of Total Supply (1,000,000,000)</span>
+          <span class="bar-row-pct">2.2% RETIRED</span>
         </div>
-        <div class="bar-projected"></div>
-        <div class="bar-marker">
-          <span class="bar-marker-label">GENESIS BURN — 22M</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:2.2%">
+            <div class="bar-shimmer"></div>
+            <div class="bar-scan"></div>
+            <div class="bar-scan bar-scan2"></div>
+          </div>
+          <div class="bar-inner-label" style="left:calc(2.2% + 10px)">GENESIS BURN — 22M</div>
         </div>
-        <div class="bar-right-label">← FUTURE BURNS ADD HERE →</div>
       </div>
 
-      <div class="bar-legend reveal reveal-d1">
+      <!-- Bar 2: Circulating supply — ~10% retired -->
+      <div class="bar-row reveal reveal-d1">
+        <div class="bar-row-head">
+          <span class="bar-row-label">Of Circulating Supply</span>
+          <span class="bar-row-pct">~10% RETIRED</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:10%">
+            <div class="bar-shimmer"></div>
+            <div class="bar-scan"></div>
+            <div class="bar-scan bar-scan2"></div>
+            <div class="bar-inner-label dark">~10% OF CIRCULATING</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bar 3: Projected future burns -->
+      <div class="bar-row reveal reveal-d2">
+        <div class="bar-row-head">
+          <span class="bar-row-label">Projected — As Revenue Links On-Chain</span>
+          <span class="bar-row-badge">LIVE SOON</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill bar-fill-wide" style="width:22%">
+            <div class="bar-shimmer"></div>
+          </div>
+          <div class="bar-projected-fill" style="left:22%"></div>
+          <div class="bar-projected-label">← FUTURE BURNS ADD HERE →</div>
+        </div>
+      </div>
+
+      <div class="bar-legend reveal reveal-d3">
         <div class="legend-item"><span class="legend-dot g"></span>Retired — 22,000,000</div>
         <div class="legend-item"><span class="legend-dot s"></span>Remaining — 978,000,000</div>
-        <div class="legend-item"><span class="legend-dot d"></span>Projected future burns</div>
       </div>
 
-      <div class="stats-grid reveal reveal-d2">
-        <div class="stat-cell">
-          <div class="stat-val g" data-count="22000000">22,000,000</div>
-          <div class="stat-lbl">Tokens removed from circulation forever</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-val g" data-count="10" data-pre="~" data-suf="%">~10%</div>
-          <div class="stat-lbl">Of circulating supply</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-val g" data-count="2.2" data-suf="%" data-dec="1">2.2%</div>
-          <div class="stat-lbl">Of total supply (1,000,000,000)</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-val" data-count="1000000000">1,000,000,000</div>
-          <div class="stat-lbl">Total $KGEN supply</div>
-        </div>
-      </div>
-
-      <p class="supply-note reveal reveal-d3">
-        <strong>Every AI data contract = a share of margin → on-chain buy &amp; retire.</strong><br>
-        The bar only grows to the right.<br>
-        <span style="font-size:10px;letter-spacing:.06em;">PROJECTED — AS REVENUE LINKS ON-CHAIN</span>
+      <p class="supply-note reveal reveal-d4">
+        <strong>Every AI data contract = a share of margin → on-chain buy &amp; retire.</strong>
+        The bar only grows to the right.
       </p>
     </div>
   </section>
