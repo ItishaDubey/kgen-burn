@@ -191,22 +191,66 @@
     .nav-hamburger {
       display: none;
       flex-direction: column;
+      justify-content: center;
       gap: 5px;
       cursor: pointer;
-      padding: 4px;
+      padding: 10px;
       margin-left: auto;
+      background: none;
+      border: none;
+      -webkit-appearance: none;
+      appearance: none;
+      touch-action: manipulation;
+      z-index: 301;
+      position: relative;
     }
     .nav-hamburger span {
+      display: block;
       width: 22px; height: 2px;
       background: var(--grey2);
       border-radius: 2px;
-      transition: all .2s;
+      transition: all .25s;
+      pointer-events: none;
     }
+    /* hamburger → X when open */
+    .nav-main.open .nav-hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-main.open .nav-hamburger span:nth-child(2) { opacity: 0; }
+    .nav-main.open .nav-hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* mobile drawer */
+    .nav-mobile-drawer {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0; right: 0;
+      background: #1F3338;
+      border-top: 1px solid rgba(140,255,5,.12);
+      border-bottom: 1px solid rgba(140,255,5,.12);
+      padding: 20px 24px 28px;
+      z-index: 299;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-main.open .nav-mobile-drawer { display: flex; }
+    .nav-mobile-drawer a {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: .08em;
+      color: var(--grey2);
+      text-decoration: none;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(219,237,241,.06);
+      transition: color .15s;
+    }
+    .nav-mobile-drawer a:last-child { border-bottom: none; }
+    .nav-mobile-drawer a:hover,
+    .nav-mobile-drawer a.active { color: var(--green); }
 
     @media (max-width: 900px) {
       .nav-links { display: none; }
       .nav-cta   { display: none; }
       .nav-hamburger { display: flex; }
+      .nav-main { position: sticky; top: 0; }
     }
     @media (max-width: 480px) {
       .nav-top { display: none; }
@@ -1066,9 +1110,18 @@
       </a>
 
       <!-- mobile hamburger -->
-      <button class="nav-hamburger" aria-label="Open menu" onclick="this.closest('nav').classList.toggle('open')">
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
+    </div>
+
+    <!-- mobile drawer -->
+    <div class="nav-mobile-drawer" id="nav-mobile-drawer">
+      <a href="https://kgen.io">Home</a>
+      <a href="https://token.kgen.io">$KGEN</a>
+      <a href="#" class="active">Burns</a>
+      <a href="https://explorer.aptoslabs.com/txn/5545574477/balanceChange?network=mainnet"
+         target="_blank" rel="noopener noreferrer">Aptos Explorer</a>
     </div>
   </nav>
 
@@ -1490,6 +1543,35 @@
         });
       },{threshold:.25});
       document.querySelectorAll('[data-count]').forEach(el=>io.observe(el));
+    }();
+
+    /* ── Mobile hamburger — iOS Safari safe ─────────────────── */
+    !function(){
+      const btn = document.getElementById('nav-hamburger');
+      const nav = btn.closest('nav');
+      if (!btn) return;
+      function toggle(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen);
+      }
+      btn.addEventListener('touchend', toggle, { passive: false });
+      btn.addEventListener('click', toggle);
+      /* close drawer when a link inside is tapped */
+      document.getElementById('nav-mobile-drawer').addEventListener('click', function(e){
+        if (e.target.tagName === 'A') {
+          nav.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      /* close drawer on outside tap */
+      document.addEventListener('touchstart', function(e){
+        if (!nav.contains(e.target)) {
+          nav.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      }, { passive: true });
     }();
 
   </script>
