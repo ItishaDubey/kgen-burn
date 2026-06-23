@@ -4,10 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KGeN Burns — Supply Only Moves One Way</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   <style>
+    /* ── Brand Fonts ───────────────────────────────────────────── */
+    @font-face {
+      font-family: 'Trim';
+      src: url('https://kgen-burn.vercel.app/fonts/Trim-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Trim';
+      src: url('https://kgen-burn.vercel.app/fonts/Trim-SemiBold.ttf') format('truetype');
+      font-weight: 600 900;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'TrimMono';
+      src: url('https://kgen-burn.vercel.app/fonts/TrimMono-Regular.ttf') format('truetype');
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'TrimPoster';
+      src: url('https://kgen-burn.vercel.app/fonts/TrimPoster-Lean.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'TrimPoster';
+      src: url('https://kgen-burn.vercel.app/fonts/TrimPoster-Average.otf') format('opentype');
+      font-weight: 500 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
     /* ─────────────────────────────────────────────────────────────
        KGeN Design System
        Primary:   Acid Green #8CFF05 | Slate Blue #1F3338
@@ -26,8 +60,8 @@
       --grey2:        #BDDCDA;
       --grey3:        #87A7A6;
       --grey4:        #436164;
-      --ui:           'Saira', sans-serif;
-      --mono:         'Space Mono', monospace;
+      --ui:           'TrimPoster', sans-serif;
+      --mono:         'TrimMono', monospace;
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
